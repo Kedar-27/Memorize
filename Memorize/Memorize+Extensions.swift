@@ -36,3 +36,11 @@ extension Color {
         )
     }
 }
+extension Array {
+    var oneAndOnly: Element? {
+        if count == 1 {
+            return first
+        }
+        return nil
+    }
+}

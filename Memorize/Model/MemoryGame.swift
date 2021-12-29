@@ -13,11 +13,15 @@ import Foundation
 struct MemoryGame<CardContent: Equatable>{
     
     private(set) var cards: [Card]
-    
-    private var indexOfOneAndOnlyFaceUpCard: Int?
-    
-    
     private(set) var score: Int = 0
+    
+    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
+        get { cards.indices.filter({ cards[$0].isFaceUp }).oneAndOnly }
+        set { cards.indices.forEach({ cards[$0].isFaceUp = ($0 == newValue) }) }
+    }
+    
+    
+    
     
     
     
@@ -42,7 +46,7 @@ struct MemoryGame<CardContent: Equatable>{
         
         
         
-        if let potentialIndex = self.indexOfOneAndOnlyFaceUpCard{
+        if let potentialIndex = self.indexOfTheOneAndOnlyFaceUpCard{
             
             if self.cards[potentialIndex].content == self.cards[chosenCardIndex].content{
               // Its a match!
@@ -53,21 +57,16 @@ struct MemoryGame<CardContent: Equatable>{
                 self.updateScore(-1)
             }
             
-            self.indexOfOneAndOnlyFaceUpCard = nil
+            self.cards[chosenCardIndex].isFaceUp = true
         }else{
             // No card selected
-            
-            for index in self.cards.indices{
-                self.cards[index].isFaceUp = false
-            }
-            
-            self.indexOfOneAndOnlyFaceUpCard = chosenCardIndex
+            self.indexOfTheOneAndOnlyFaceUpCard = chosenCardIndex
         }
         
         
         
         
-        self.cards[chosenCardIndex].isFaceUp.toggle()
+        
     }
     
     
@@ -78,14 +77,17 @@ struct MemoryGame<CardContent: Equatable>{
 
     
     struct Card: Identifiable,Equatable{
+        
+        let id: Int
+        var isMatched = false
+        var isFaceUp = false
+        let content: CardContent
+        
+        
         static func == (lhs: MemoryGame<CardContent>.Card, rhs: MemoryGame<CardContent>.Card) -> Bool {
             return lhs.id == rhs.id && lhs.isFaceUp == rhs.isFaceUp && lhs.isMatched == rhs.isMatched && lhs.content == rhs.content
         }
-        
-        var id: Int
-        var isMatched: Bool = false
-        var isFaceUp: Bool = false
-        var content: CardContent
+
     }
     
     
