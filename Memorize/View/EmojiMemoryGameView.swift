@@ -55,7 +55,7 @@ struct EmojiMemoryGameView: View {
     
     var gameBody: some View{
         AspectVGrid(items: viewModel.cards, aspectRatio: CardConstants.aspectRatio) { card in
-        if  self.isUndealt(card) || (card.isMatched && !card.isFaceUp ){
+            if  self.isUndealt(card) || (card.isMatched && !card.isFaceUp ){
                 //Rectangle().opacity(0) // Can be replaced with Color.clear
                 Color.clear
             }
@@ -73,10 +73,13 @@ struct EmojiMemoryGameView: View {
             }
         }
         .onAppear {
-            for card in viewModel.cards{
-                self.deal(card)
-            }
             
+            DispatchQueue.main.async {
+                for card in viewModel.cards{
+                    self.deal(card)
+                }
+                
+            }
         }
         
         
@@ -101,7 +104,7 @@ struct EmojiMemoryGameView: View {
         Button("Restart") {
             withAnimation {
                 self.dealtCards = []
-               // game.restart()
+                // game.restart()
             }
         }
     }
@@ -114,7 +117,7 @@ struct EmojiMemoryGameView: View {
         static let undealtHeight: CGFloat = 90
         static let undealtWidth = undealtHeight * aspectRatio
     }
-
+    
     
     
     // MARK: - Methods
