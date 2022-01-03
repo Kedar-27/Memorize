@@ -36,7 +36,7 @@ struct MemoryGame<CardContent: Equatable>{
             self.cards.append(Card( id: index*2+1, content: cardContent))
         }
         
-        self.cards.shuffle()
+        self.shuffleCards()
         
     }
     
@@ -74,6 +74,10 @@ struct MemoryGame<CardContent: Equatable>{
         self.score = self.score + newScore
     }
     
+    
+    mutating func shuffleCards(){
+        self.cards.shuffle()
+    }
 
     
     struct Card: Identifiable,Equatable{

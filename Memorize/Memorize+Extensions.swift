@@ -44,3 +44,9 @@ extension Array {
         return nil
     }
 }
+
+extension View {
+    func cardify(isFaceUp: Bool,color: Color) -> some View {
+        self.modifier(Cardify(isFaceUp: isFaceUp, color: color))
+    }
+}
