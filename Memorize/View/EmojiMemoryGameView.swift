@@ -11,22 +11,23 @@ struct EmojiMemoryGameView: View {
     
     // Step 2: Add @ObservedObject to listen to changes.
     @ObservedObject var viewModel: EmojiMemoryGame
-    @State private var dealtCards = Set<Int>()
     
+    @State private var dealtCards = Set<Int>()
+    @Namespace private var dealingNamespace
     
     var body: some View {
         NavigationView{
-            
-            VStack(alignment: .center) {
-                gameBody
-                
-                HStack{
-                    restart
-                    Spacer()
-                    shuffleButton
+            ZStack(alignment: .bottom) {
+                VStack {
+                    gameBody
+                    HStack {
+                        restart
+                        Spacer()
+                        self.shuffleButton
+                    }
+                    .padding(.horizontal)
                 }
-                
-                
+                deckBody
             }
             .font(.largeTitle)
             .padding(.all, 15.0)
@@ -61,8 +62,10 @@ struct EmojiMemoryGameView: View {
             }
             else {
                 CardView(card: card, color: viewModel.currentTheme)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(4)
-                    .transition(AnyTransition.asymmetric(insertion: .scale, removal: .opacity).animation(.easeInOut(duration: 1)))
+                    .zIndex(zIndex(of: card))
+                    .transition(AnyTransition.asymmetric(insertion: .identity, removal: .scale))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 1)) {
                             viewModel.choose(card)
@@ -72,18 +75,39 @@ struct EmojiMemoryGameView: View {
                     }
             }
         }
-        .onAppear {
-            
-            DispatchQueue.main.async {
-                for card in viewModel.cards{
+        
+        
+    }
+    
+    var deckBody: some View {
+        ZStack {
+            ForEach(viewModel.cards.filter(isUndealt)) { card in
+                CardView(card: card, color: self.viewModel.currentTheme)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(AnyTransition
+                                    .asymmetric(insertion: .opacity, removal: .identity))
+                    .zIndex(zIndex(of: card))
+            }
+        }
+        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
+        .foregroundColor(CardConstants.color)
+        .onTapGesture {
+            // "deal" cards
+            for card in self.viewModel.cards{
+                
+                withAnimation(dealAnimation(for: card)) {
+                    
+                    //Not needed, since using matchedGeometryEffect
+                    //  DispatchQueue.main.async {
                     self.deal(card)
+                    
+                    // }
                 }
                 
             }
         }
-        
-        
     }
+    
     
     var shuffleButton: some View{
         
@@ -104,7 +128,7 @@ struct EmojiMemoryGameView: View {
         Button("Restart") {
             withAnimation {
                 self.dealtCards = []
-                // game.restart()
+                viewModel.restart()
             }
         }
     }
@@ -129,6 +153,18 @@ struct EmojiMemoryGameView: View {
     
     private func isUndealt(_ card: MemoryGame<String>.Card) -> Bool{
         !self.dealtCards.contains(card.id)
+    }
+    
+    private func dealAnimation(for card: MemoryGame<String>.Card) -> Animation {
+        var delay = 0.0
+        if let index = viewModel.cards.firstIndex(where: { $0.id == card.id }) {
+            delay = Double(index) * ( CardConstants.totalDealDuration / Double(viewModel.cards.count))
+        }
+        return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
+    }
+    
+    private func zIndex(of card: MemoryGame<String>.Card) -> Double {
+        -Double(viewModel.cards.firstIndex(where: { $0.id == card.id }) ?? 0)
     }
     
 }

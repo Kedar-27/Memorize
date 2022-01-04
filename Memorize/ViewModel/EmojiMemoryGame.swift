@@ -69,6 +69,10 @@ class EmojiMemoryGame: ObservableObject{
         self.model.shuffleCards()
     }
 
-    
+    func restart(){
+        self.model =  EmojiMemoryGame.createMemoryGame(theme: self.themeModel.currentTheme!)
+        self.shuffleCards()
+    }
+
 }
 
