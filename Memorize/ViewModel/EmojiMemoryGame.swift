@@ -33,7 +33,7 @@ class EmojiMemoryGame: ObservableObject{
     
     
     // MARK: - Methods
-    static func createMemoryGame(theme: EmojiTheme.EmojiThemeModel) -> MemoryGame<String> {
+    static func createMemoryGame(theme: EmojiThemeModel) -> MemoryGame<String> {
       return  MemoryGame<String>(numberOfPairsOfCards: 4) { index in
           return theme.emojis[index]
         }

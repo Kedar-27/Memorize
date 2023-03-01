@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 
 struct EmojiTheme{
@@ -41,18 +40,18 @@ struct EmojiTheme{
         switch theme{
             
         case .vehicle:
-           return EmojiThemeModel(name: "Vehicle", emojis: self.vehicleEmojis, hexColor: "#12c233", numberOfPairOfCards: 5)
+            return EmojiThemeModel(id: UUID().uuidString, name: "Vehicle", emojis: self.vehicleEmojis, hexColor: "#12c233", numberOfPairOfCards: 5)
             
         case .halloween:
-            return EmojiThemeModel(name: "Halloween", emojis: self.halloweenEmojis, hexColor: "#f1548d", numberOfPairOfCards: 5)
+            return EmojiThemeModel(id: UUID().uuidString, name: "Halloween", emojis: self.halloweenEmojis, hexColor: "#f1548d", numberOfPairOfCards: 5)
         case .suites:
-            return EmojiThemeModel(name: "Suites", emojis: self.suitesEmojis, hexColor: "#3091d6", numberOfPairOfCards: 5)
+            return EmojiThemeModel(id: UUID().uuidString, name: "Suites", emojis: self.suitesEmojis, hexColor: "#3091d6", numberOfPairOfCards: 5)
         case .sports:
-            return EmojiThemeModel(name: "Sports", emojis: self.vehicleEmojis, hexColor: "#ff6663", numberOfPairOfCards: 5)
+            return EmojiThemeModel(id: UUID().uuidString, name: "Sports", emojis: self.vehicleEmojis, hexColor: "#ff6663", numberOfPairOfCards: 5)
         case .food:
-            return EmojiThemeModel(name: "Food", emojis: self.foodEmojis, hexColor: "#a15ebb", numberOfPairOfCards: 5)
+            return EmojiThemeModel(id: UUID().uuidString, name: "Food", emojis: self.foodEmojis, hexColor: "#a15ebb", numberOfPairOfCards: 5)
         case .faces:
-            return EmojiThemeModel(name: "Faces", emojis: self.facesEmojis, hexColor: "#fba72c", numberOfPairOfCards: 5)
+            return EmojiThemeModel(id: UUID().uuidString, name: "Faces", emojis: self.facesEmojis, hexColor: "#fba72c", numberOfPairOfCards: 5)
         }
         
     }
@@ -71,13 +70,6 @@ struct EmojiTheme{
     
     
 
-    struct EmojiThemeModel{
-        let name: String
-        let emojis: [String]
-        let hexColor: String
-        let numberOfPairOfCards: Int
-
-    }
 
     
 }
